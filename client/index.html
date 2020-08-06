@@ -3,22 +3,49 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.14.0/css/all.css"
+      integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="./styles.css" />
     <title>Blink Led</title>
   </head>
   <body>
     <main id="app">
       <div class="container">
-        <h1>Led Blinkzzz</h1>
-        <div class="button-container">
-          <button id="toggle-button" @click="ledToggle">
-            Toggle {{ ledState === 0 ? 'On' : 'Off' }}
-          </button>
-          <button id="blink-button" @click="ledBlinkToggle">
-            {{ ledState === 2 ? 'Stop Blinking' : 'Blink!' }}
-          </button>
+        <header>
+          <h1>Welcome to Arduino Web Control</h1>
+          <h5>Control your Leds And Check The Temperature</h5>
+        </header>
+        <hr />
+        <div class="card">
+          <h2>Current Room Temperature</h2>
+          <h4><span>{{ currentTemperature }} °C</span></h4>
+          <p v-if="latestTempChange">Last Change: {{ latestTempChange }}</p>
         </div>
-        <h3>Current Led State: {{ ledState }}</h3>
+        <hr />
+        <div class="card">
+          <h2>Led Toggle/Blink</h2>
+          <div class="button-container">
+            <button id="toggle-button" @click="ledToggle">
+              <i class="fa fa-power-off"></i>
+              Toggle {{ ledState === 0 ? 'On' : 'Off' }}
+            </button>
+            <button id="blink-button" @click="ledBlinkToggle">
+              <i class="far fa-lightbulb"></i>
+              {{ ledState === 2 ? 'Stop Blinking' : 'Blink!' }}
+            </button>
+          </div>
+          <h4>Current Led State: <span>{{ ledState }}</span></h4>
+        </div>
+        <hr />
+        <div class="card">
+          <h2>Rgb Led Color Picker</h2>
+          <input type="color" v-model="rgbColor" @change="setRgbColor" />
+          <h4>Current Rgb value: <span>{{ rgbColor }}</span></h4>
+        </div>
       </div>
     </main>
     <script
@@ -27,15 +54,29 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--
+      Create ip.js file and add your ip + server port there as a variable
+    -->
+    <script src="ip.js"></script>
     <script>
-      const address = window.location.href;
+      const address = ip;
       const socket = io(address);
+
+      // Temperature change is incoming, all others are sent from client
+      socket.on('temperature-change', (temperature) => {
+        const time = new Date().toLocaleString();
+        app.currentTemperature = temperature;
+        app.latestTempChange = time;
+      });
 
       const app = new Vue({
         el: '#app',
         data: {
           // 0 - off, 1 - on, 2 - blink
           ledState: 0,
+          rgbColor: '#FF0000',
+          currentTemperature: 20,
+          latestTempChange: null,
         },
         methods: {
           ledToggle() {
@@ -57,6 +98,9 @@
               socket.emit('blink');
               this.ledState = 2;
             }
+          },
+          setRgbColor(e) {
+            socket.emit('rgb-color-change', e.target.value);
           },
         },
       });

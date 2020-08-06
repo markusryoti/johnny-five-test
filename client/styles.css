@@ -7,22 +7,50 @@
 body {
   background-color: #07a0c3;
   font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+header {
+  margin-bottom: 60px;
 }
 
 .container {
-  width: 50%;
+  width: 75%;
   margin: 0 auto;
   text-align: center;
   padding: 2rem;
 }
 
+.card {
+  margin: 3rem 0 3rem 0;
+  padding: 1rem;
+}
+
 h1 {
-  margin-bottom: 50px;
+  color: #fff1d0;
+  margin-bottom: 10px;
+}
+
+h2 {
+  margin-bottom: 40px;
   color: #fff1d0;
 }
 
-h3 {
+h4 {
   margin-top: 40px;
+  color: #fff1d0;
+}
+
+h4 span {
+  font-size: 1.5rem;
+}
+
+h5 {
+  color: #fff1d0;
+}
+
+p {
+  margin-top: 20px;
   color: #fff1d0;
 }
 
@@ -46,5 +74,15 @@ button {
 }
 
 button:focus {
+  outline: none;
+}
+
+input[type='color'] {
+  border: none;
+  height: 50px;
+  width: 100px;
+}
+
+input[type='color']:focus {
   outline: none;
 }
