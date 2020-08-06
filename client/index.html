@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Blink Led</title>
+  </head>
+  <body>
+    <main id="app">
+      <div class="container">
+        <h1>Led Blinkzzz</h1>
+        <div class="button-container">
+          <button id="toggle-button" @click="ledToggle">
+            Toggle {{ ledState === 0 ? 'On' : 'Off' }}
+          </button>
+          <button id="blink-button" @click="ledBlinkToggle">
+            {{ ledState === 2 ? 'Stop Blinking' : 'Blink!' }}
+          </button>
+        </div>
+        <h3>Current Led State: {{ ledState }}</h3>
+      </div>
+    </main>
+    <script src="http://localhost:5000/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      const socket = io('http://localhost:5000');
+
+      const app = new Vue({
+        el: '#app',
+        data: {
+          // 0 - off, 1 - on, 2 - blink
+          ledState: 0,
+        },
+        methods: {
+          ledToggle() {
+            if (this.ledState === 0) {
+              socket.emit('on');
+              this.ledState = 1;
+            } else {
+              socket.emit('stop');
+              socket.emit('off');
+              this.ledState = 0;
+            }
+          },
+          ledBlinkToggle() {
+            if (this.ledState === 2) {
+              socket.emit('stop');
+              socket.emit('off');
+              this.ledState = 0;
+            } else {
+              socket.emit('blink');
+              this.ledState = 2;
+            }
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
