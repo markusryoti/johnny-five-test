@@ -86,3 +86,23 @@ input[type='color'] {
 input[type='color']:focus {
   outline: none;
 }
+
+.rgb-toggle-container {
+  margin-top: 1.5rem;
+}
+
+.rgb-toggle-container label {
+  color: #fff1d0;
+  font-size: 1rem;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.rgb-toggle-container input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 5px;
+  margin-left: 10px;
+  vertical-align: middle;
+}

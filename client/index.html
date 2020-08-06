@@ -44,6 +44,15 @@
         <div class="card">
           <h2>Rgb Led Color Picker</h2>
           <input type="color" v-model="rgbColor" @change="setRgbColor" />
+          <div class="rgb-toggle-container">
+            <label for="rgb-toggle">Toggle Rgb</label>
+            <input
+              type="checkbox"
+              v-model="rgbState"
+              id="rgb-toggle"
+              @change="toggleRgb"
+            />
+          </div>
           <h4>Current Rgb value: <span>{{ rgbColor }}</span></h4>
         </div>
       </div>
@@ -74,6 +83,7 @@
         data: {
           // 0 - off, 1 - on, 2 - blink
           ledState: 0,
+          rgbState: false,
           rgbColor: '#FF0000',
           currentTemperature: 20,
           latestTempChange: null,
@@ -101,6 +111,13 @@
           },
           setRgbColor(e) {
             socket.emit('rgb-color-change', e.target.value);
+          },
+          toggleRgb() {
+            if (this.rgbState) {
+              socket.emit('rgb-toggle', this.rgbState);
+            } else {
+              socket.emit('rgb-toggle', this.rgbState);
+            }
           },
         },
       });

@@ -33,8 +33,8 @@ board.on('ready', () => {
     },
   });
 
-  rgb.on();
   rgb.color('#FF0000');
+  rgb.off();
 
   thermometer.on('change', () => {
     const { celsius } = thermometer;
@@ -51,6 +51,7 @@ const connection = io.on('connection', (socket) => {
   socket.on('blink', () => led.blink(500));
   socket.on('stop', () => led.stop());
   socket.on('rgb-color-change', (color) => rgb.color(color));
+  socket.on('rgb-toggle', (state) => (state ? rgb.on() : rgb.off()));
 
   return socket;
 });
